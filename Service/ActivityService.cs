@@ -1,5 +1,8 @@
 using Service.Interfaces;
 using Microsoft.Extensions.Logging;
+using Repository.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using Model;
 using Repository.Interfaces;
 using Repository.ViewModels;
 
@@ -7,23 +10,33 @@ namespace Service
 {
     public class ActivityService : IActivityService
     {
-        private readonly IActivityRepostory _activityRepostory;
         private readonly ILogger<ActivityService> _logger;
+        private readonly SqliteDataContext _dbContext;
+        private readonly IActivityRepostory _repostory;
 
-        public ActivityService(ILogger<ActivityService> logger, IActivityRepostory activityRepostory)
+        public ActivityService(ILogger<ActivityService> logger, SqliteDataContext dbContext, IActivityRepostory repostory)
         {
+            _repostory = repostory;
+            _dbContext = dbContext;
             _logger = logger;
-            _activityRepostory = activityRepostory;
         }
 
-        public Task<IEnumerable<ActivityViewModel>> GetAsync()
+        public async Task<IEnumerable<ActivityViewModel>> GetAsync()
         {
-            return _activityRepostory.GetAsync();
+            //用entity
+            // return await _dbContext.Activitys.ToListAsync();
+
+            //用dapper
+            return await _repostory.GetAsync();
         }
 
-        public Task<ActivityViewModel> GetByIdAsync(Guid id)
+        public async Task<ActivityViewModel> GetByIdAsync(Guid id)
         {
-            return _activityRepostory.GetByIdAsync(id);
+            //用entity
+            // return await _dbContext.Activitys.SingleOrDefaultAsync(x => x.Id == id);
+
+            //用dapper
+            return await _repostory.GetByIdAsync(id);
         }
     }
 }

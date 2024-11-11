@@ -3,7 +3,6 @@ using Repository.DbContexts;
 using Repository.SeedDatas;
 using API.Extensions;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -37,10 +36,12 @@ using var scope = app.Services.CreateScope();
 var service = scope.ServiceProvider;
 try
 {
+    //用entity
     var context = service.GetRequiredService<SqliteDataContext>();
     await context.Database.MigrateAsync();
     await Seed.ActivitySeedData(context);
 
+    //用Dapper
     // var connection = service.GetRequiredService<IDbConnection>();
     // await Seed.ActivitySeedData(connection);
 }

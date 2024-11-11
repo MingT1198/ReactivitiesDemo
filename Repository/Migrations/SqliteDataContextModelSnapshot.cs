@@ -44,7 +44,7 @@ namespace Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Activity");
+                    b.ToTable("Activity", (string)null);
                 });
 #pragma warning restore 612, 618
         }

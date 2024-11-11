@@ -1,6 +1,5 @@
 using Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Repository.ViewModels;
 
 namespace API.Controllers
 {

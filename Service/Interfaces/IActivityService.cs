@@ -1,3 +1,4 @@
+using Model;
 using Repository.ViewModels;
 
 namespace Service.Interfaces

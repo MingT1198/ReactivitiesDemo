@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Service;
 using Repository.DbContexts;
 using Repository;
+using Dapper;
+using API.Handlers;
 
 namespace API.Extensions
 {
@@ -31,7 +33,6 @@ namespace API.Extensions
                 .WithTransientLifetime()
             );
 
-            //repository移除因為，使用dapper讀取sqlite會遇到轉型問題，因為sqlite沒有那麼多型別很多直接使用string存
             services.Scan(scan => scan
                 .FromAssemblyOf<ActivityRepostory>()
                 .AddClasses(classes => classes
@@ -46,6 +47,9 @@ namespace API.Extensions
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
             );
+
+            //因sqlite只有四個型別，要自行加入dapper的SqlMapper TypeHandler
+            SqlMapper.AddTypeHandler(new DapperForSqliteTypeHandler<Guid>());
         }
     }
 }
