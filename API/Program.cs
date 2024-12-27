@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Repository.DbContexts;
 using Repository.SeedDatas;
 using API.Extensions;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,13 +36,13 @@ var service = scope.ServiceProvider;
 try
 {
     //用entity
-    var context = service.GetRequiredService<SqliteDataContext>();
-    await context.Database.MigrateAsync();
-    await Seed.ActivitySeedData(context);
+    // var context = service.GetRequiredService<SqliteDataContext>();
+    // await context.Database.MigrateAsync();
+    // await Seed.ActivitySeedData(context);
 
     //用Dapper
-    // var connection = service.GetRequiredService<IDbConnection>();
-    // await Seed.ActivitySeedData(connection);
+    var connection = service.GetRequiredService<IDbConnection>();
+    await Seed.ActivitySeedData(connection);
 }
 catch (Exception ex)
 {
