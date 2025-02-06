@@ -3,9 +3,14 @@
   <n-layout>
     <n-config-provider :theme="themeRef" :locale="zhTW" :date-locale="dateZhTW">
       <n-layout>
-        <n-layout-header bordered style="height: 10vh;">
+        <n-layout-header bordered style="height: 7vh;">
           <n-flex justify="space-between" style="padding: 0px 15px;">
-            <h1>頁首</h1>
+            <n-button quaternary circle @click="router.push({name: 'home'})">
+              <template #icon>
+                <Home v-show="!isDarkThemeRef" />
+                <HomeOutline v-show="isDarkThemeRef" />
+              </template>
+            </n-button>
             <n-button text @click="changeThemeAction">
               <template #icon>
                 <DarkModeFilled v-show="!isDarkThemeRef" />
@@ -14,7 +19,7 @@
             </n-button>
           </n-flex>
         </n-layout-header>
-        <n-layout has-sider style="height: 80vh;">
+        <n-layout has-sider style="height: 83vh;">
           <n-layout-sider
             collapse-mode="width"
             :collapsed-width="16"
@@ -38,8 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import { DarkModeFilled, DarkModeOutlined } from '@vicons/material';
 import type {GlobalTheme, MenuOption } from 'naive-ui'
+import type { Ref } from 'vue'
+
+import { DarkModeFilled, DarkModeOutlined } from '@vicons/material';
+import { Home, HomeOutline } from '@vicons/ionicons5';
 import { zhTW, dateZhTW } from 'naive-ui'
 import { NLayout,
   NLayoutSider,
@@ -53,38 +61,12 @@ import { NLayout,
   darkTheme
 } from 'naive-ui'
 
-import { RouterLink, RouterView } from 'vue-router'
-import type { Ref } from 'vue'
+import { routerHelper } from './router';
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { h, ref } from 'vue'
 
-const menuOptions: MenuOption[] = [
-  {
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: {
-            name: 'home',
-          }
-        },
-        { default: () => '首頁' }
-      ),
-    key: 'home',
-  },
-  {
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: {
-            name: 'about',
-          }
-        },
-        { default: () => '關於' }
-      ),
-    key: 'about',
-  }
-];
+const router = useRouter();
+const menuOptions: MenuOption[] = routerHelper.getMenu();
 const isDarkThemeRef: Ref<boolean> = ref(false);
 const themeRef: Ref<GlobalTheme | null> = ref(null);
 
