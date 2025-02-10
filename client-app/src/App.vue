@@ -23,7 +23,7 @@
           <n-layout-sider
             collapse-mode="width"
             :collapsed-width="16"
-            :width="200"
+            :max-width="200"
             :show-collapsed-content="false"
             show-trigger="arrow-circle"
             bordered
@@ -31,11 +31,11 @@
             <n-menu :options="menuOptions" />
           </n-layout-sider>
           <n-layout-content>
-            <RouterView />
+              <RouterView />
           </n-layout-content>
         </n-layout>
         <n-layout-footer bordered style="height: 10vh;">
-          頁腳
+          © MingT 2025
         </n-layout-footer>
       </n-layout>
     </n-config-provider>
@@ -43,11 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import type {GlobalTheme, MenuOption } from 'naive-ui'
+import type {GlobalTheme, MenuOption, ConfigProviderProps } from 'naive-ui'
 import type { Ref } from 'vue'
 
-import { DarkModeFilled, DarkModeOutlined } from '@vicons/material';
-import { Home, HomeOutline } from '@vicons/ionicons5';
+import { DarkModeFilled, DarkModeOutlined } from '@vicons/material'
+import { Home, HomeOutline } from '@vicons/ionicons5'
 import { zhTW, dateZhTW } from 'naive-ui'
 import { NLayout,
   NLayoutSider,
@@ -58,21 +58,40 @@ import { NLayout,
   NConfigProvider,
   NFlex,
   NButton,
-  darkTheme
+  lightTheme,
+  darkTheme,
+  createDiscreteApi,
 } from 'naive-ui'
 
-import { routerHelper } from './router';
-import { RouterLink, RouterView, useRouter } from 'vue-router'
-import { h, ref } from 'vue'
+import { routerHelper } from './router'
+import { RouterView, useRouter } from 'vue-router'
+import { ref, computed, reactive, provide } from 'vue'
 
 const router = useRouter();
 const menuOptions: MenuOption[] = routerHelper.getMenu();
 const isDarkThemeRef: Ref<boolean> = ref(false);
-const themeRef: Ref<GlobalTheme | null> = ref(null);
+const themeRef: Ref<GlobalTheme> = ref(lightTheme);
+
+const configProviderPropsComputed = computed<ConfigProviderProps>(() => ({
+  theme: themeRef.value = isDarkThemeRef.value ? darkTheme : lightTheme
+}));
+
+//建立脫離n-xxx-provider的物件
+const { message, notification, dialog, loadingBar, modal } = createDiscreteApi(
+  ['message', 'dialog', 'notification', 'loadingBar', 'modal'],
+  {
+    configProviderProps: configProviderPropsComputed
+  }
+);
+// 創建響應式全域物件
+const globalComponents = reactive({
+    message, notification, dialog, loadingBar, modal
+});
+// 提供全域物件
+provide('globalComponents', globalComponents)
 
 const changeThemeAction = (): void => {
   isDarkThemeRef.value = !isDarkThemeRef.value;
-  themeRef.value = isDarkThemeRef.value ? darkTheme : null;
 }
 </script>
 
@@ -83,7 +102,6 @@ const changeThemeAction = (): void => {
 .n-layout-content {
   padding: 12px;
 }
-
 .n-layout-sider {
   padding: 16px;
 }
