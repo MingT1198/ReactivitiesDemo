@@ -3,7 +3,7 @@
   <n-layout>
     <n-config-provider :theme="themeRef" :locale="zhTW" :date-locale="dateZhTW">
       <n-layout>
-        <n-layout-header bordered style="height: 7vh;">
+        <n-layout-header bordered style="height: 5vh;">
           <n-flex justify="space-between" style="padding: 0px 15px;">
             <n-button quaternary circle @click="router.push({name: 'home'})">
               <template #icon>
@@ -19,11 +19,11 @@
             </n-button>
           </n-flex>
         </n-layout-header>
-        <n-layout has-sider style="height: 83vh;">
+        <n-layout has-sider style="height: 85vh;">
           <n-layout-sider
             collapse-mode="width"
             :collapsed-width="16"
-            :max-width="200"
+            :max-width="150"
             :show-collapsed-content="false"
             show-trigger="arrow-circle"
             bordered
@@ -34,7 +34,7 @@
               <RouterView />
           </n-layout-content>
         </n-layout>
-        <n-layout-footer bordered style="height: 10vh;">
+        <n-layout-footer bordered style="height: 6vh;">
           © MingT 2025
         </n-layout-footer>
       </n-layout>
