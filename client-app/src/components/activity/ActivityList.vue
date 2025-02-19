@@ -38,5 +38,5 @@ const emitSelectActivity = (id: string):void => {
 }
 </script>
 
-<style>
+<style scoped>
 </style>

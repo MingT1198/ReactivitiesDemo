@@ -53,15 +53,11 @@ const emitEditModeActivity = () => {
 </script>
 
 <style scoped>
-.n-card {
-    max-height: 60vh;
-}
 .flex {
-    flex-wrap: nowrap;
     justify-content: "center"
 }
 .n-button {
-    flex:1 1 auto;
+    flex:1;
 }
 </style>
   

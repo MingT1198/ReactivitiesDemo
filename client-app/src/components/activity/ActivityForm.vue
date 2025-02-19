@@ -75,7 +75,7 @@
     }
 
     watch(() => prop.activity, (newValue) => {
-        formValueRef.value = newValue ?? ({} as Activity)
+        formValueRef.value = newValue ? JSON.parse(JSON.stringify(newValue)) : ({} as Activity)
     }, { immediate: true })
 
     const emit = defineEmits<{

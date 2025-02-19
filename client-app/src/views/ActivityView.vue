@@ -3,11 +3,23 @@
         <n-button ghost size="small" type="primary" style="flex-grow:1; max-width: 50px;" @click="handleCreateActivity">
             <template #icon><Create /></template>
         </n-button>
-        <n-flex style="flex-grow:4; flex-wrap: nowrap; justify-content: center;">
-            <activity-list :activitys="activitys" @select-activity="handleSelectActivity" v-if="activitys"/>
-            <n-flex vertical style="max-width:35%; margin: 2px 15px 2px 5px;">
-                <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity" v-if="activity && !(editMode)"/>
+        <n-flex style="flex-grow:4; justify-content: center;">
+            <activity-list style="flex: 3;" :activitys="activitys" @select-activity="handleSelectActivity" v-if="activitys"/>
+
+            <n-flex vertical style="flex: 2; padding: 5px;" v-if="(activity || editMode) && !isMobile">
+                <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity" v-if="activity && !editMode"/>
                 <activity-form :activity="activity" @cancel-mode-activity="handleCancelModeActivity" v-if="editMode"/>
+            </n-flex>
+
+            <n-flex vertical style="flex: 2;" v-else-if="(activity || editMode) && isMobile">
+                <n-modal :show="(activity !== undefined)" >
+                    <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity"/>
+                </n-modal>
+                <n-drawer :default-width="'90%'" :show="editMode" placement="right">
+                    <n-drawer-content>
+                      <activity-form :activity="activity" @cancel-mode-activity="handleCancelModeActivity"/>
+                  </n-drawer-content>
+                </n-drawer>
             </n-flex>
         </n-flex>
     </n-flex>
@@ -15,18 +27,19 @@
 
 <script lang="ts">
 import type { Activity } from '@/models/Activity';
+import type { Ref, Reactive, ComputedRef } from 'vue';
 
 import { Create } from '@vicons/ionicons5';
 
-import type { Ref } from 'vue';
-import { NFlex, NButton } from 'naive-ui';
+import { NFlex, NButton, NDrawer, NDrawerContent, NModal } from 'naive-ui';
 
 import ActivityList from '@/components/activity/ActivityList.vue';
 import ActivityDital from '@/components/activity/ActivityDital.vue';
 import ActivityForm from '@/components/activity/ActivityForm.vue';
 
 import axios from 'axios';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, inject } from 'vue';
+import { UndoFilled } from '@vicons/material';
 
 export default defineComponent({ 
     components: {
@@ -35,12 +48,18 @@ export default defineComponent({
         ActivityForm,
         NFlex,
         NButton,
-        Create
+        Create,
+        NDrawer,
+        NDrawerContent,
+        NModal
     },
     setup() {
         const activitysRef: Ref<Activity[]| null> = ref(null);
         const activityRef: Ref<Activity | undefined> = ref(undefined);
         const editModeRef: Ref<boolean> = ref(false);
+
+        const globalComponents = inject<Reactive<any>>('globalComponents');
+        const isMobile = inject<ComputedRef<boolean>>('isMobile');
 
         const getActivitys = async () => {
             await axios.get<Activity[]>('/api/activity').then( res => { activitysRef.value = res.data; });
@@ -57,6 +76,7 @@ export default defineComponent({
             activitys: activitysRef,
             activity: activityRef,
             editMode: editModeRef,
+            isMobile,
             handleCancelActivity: ():void => { activityRef.value = undefined; },
             handleEditModeActivity: ():void => { editModeRef.value = true; },
             handleCancelModeActivity: ():void => {
@@ -76,5 +96,5 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 </style>

@@ -10,13 +10,13 @@
                 <n-menu :options="menuOptions" mode="horizontal" />
               </div>
               <div v-else>
-                <n-button text @click="() => showModalRef=!showModalRef">
+                <n-button text @click="() => showDrawerRef=!showDrawerRef">
                   <template #icon>
                     <MenuIcon />
                   </template>
                 </n-button>
-                <n-drawer v-model:show="showModalRef" placement="left">
-                  <n-drawer-content title="">
+                <n-drawer v-model:show="showDrawerRef" placement="left">
+                  <n-drawer-content closable>
                     <n-menu :options="menuOptions" />
                   </n-drawer-content>
                 </n-drawer>
@@ -33,12 +33,14 @@
           </n-flex>
         </n-layout-header>
         <n-layout has-sider style="height: 85vh;">
-          <n-layout-content>
+          <n-layout-content style="width: 100vw;">
               <RouterView />
           </n-layout-content>
         </n-layout>
         <n-layout-footer bordered style="height: 6vh;">
-          © MingT 2025
+          <n-flex justify="end">
+            © MingT 2025
+          </n-flex>
         </n-layout-footer>
       </n-layout>
     </n-config-provider>
@@ -70,22 +72,30 @@ import { NLayout,
 
 import { routerHelper } from './router'
 import { RouterView } from 'vue-router'
-import { ref, computed, reactive, provide } from 'vue'
+import { ref, computed, reactive, provide, onMounted, onUnmounted } from 'vue'
 
 const menuOptions: MenuOption[] = routerHelper.getMenu();
 const isDarkThemeRef: Ref<boolean> = ref(false);
 const themeRef: Ref<GlobalTheme> = ref(lightTheme);
 const windowWidthRef: Ref<number> = ref(window.innerWidth);
-const showModalRef: Ref<boolean> = ref(false);
+const showDrawerRef: Ref<boolean> = ref(false);
 
 const configProviderPropsComputed = computed<ConfigProviderProps>(() => ({
   theme: themeRef.value = isDarkThemeRef.value ? darkTheme : lightTheme
 }));
 const isMobileComputed = computed<boolean>(() => windowWidthRef.value < 768);
 
-window.addEventListener('resize', () => {
-  windowWidthRef.value = window.innerWidth
-})
+// 監聽視窗大小變化
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    windowWidthRef.value = window.innerWidth
+  });
+});
+onUnmounted(() => {
+  window.removeEventListener('resize', () => {
+    windowWidthRef.value = window.innerWidth
+  });
+});
 
 //建立脫離n-xxx-provider的物件
 const { message, notification, loadingBar, modal } = createDiscreteApi(
@@ -99,13 +109,12 @@ const globalComponents = reactive({
     message, notification, loadingBar, modal
 });
 // 提供全域物件
-provide('globalComponents', globalComponents)
+provide('globalComponents', globalComponents);
+provide('isMobile', isMobileComputed);
 
 const changeThemeAction = (): void => {
   isDarkThemeRef.value = !isDarkThemeRef.value;
-}
-
-
+};
 
 </script>
 
