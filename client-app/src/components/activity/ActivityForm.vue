@@ -40,9 +40,9 @@
             type: Object as () => Activity | undefined,
             required: true,
         }
-    });
+    })
 
-    const globalComponents = inject<Reactive<any>>('globalComponents');
+    const globalComponents = inject<Reactive<any>>('globalComponents')
 
     const formRef: Ref<FormInst | null> = ref<FormInst | null>(null)
     const formValueRef: Ref<Activity>  = ref<Activity>({} as Activity)
@@ -80,7 +80,7 @@
 
     const emit = defineEmits<{
         (e: 'cancelModeActivity'): void;
-    }>();
+    }>()
     const handleValidateClick = (e: MouseEvent) => {
         e.preventDefault()
         formRef.value?.validate((errors) => {

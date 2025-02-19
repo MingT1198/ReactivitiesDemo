@@ -30,11 +30,11 @@ const {activitys} = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: 'selectActivity', newValue: Activity | undefined): void;
+  (e: 'selectActivity', newValue: Activity | undefined): void
 }>();
 const emitSelectActivity = (id: string):void => {
-  const activity: Activity | undefined = activitys.find(a => a.id === id);
-  emit('selectActivity', activity);
+  const activity: Activity | undefined = activitys.find(a => a.id === id)
+  emit('selectActivity', activity)
 }
 </script>
 

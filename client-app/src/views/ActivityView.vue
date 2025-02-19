@@ -39,7 +39,6 @@ import ActivityForm from '@/components/activity/ActivityForm.vue';
 
 import axios from 'axios';
 import { defineComponent, ref, inject } from 'vue';
-import { UndoFilled } from '@vicons/material';
 
 export default defineComponent({ 
     components: {

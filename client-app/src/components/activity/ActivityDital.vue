@@ -32,16 +32,16 @@ const {activity} = defineProps({
         type: Object as () => Activity | undefined,
         required: true,
     }
-});
+})
 
 const activityComputed = computed<Activity>(() => 
   activity ?? ({} as Activity)
-);
+)
 
 const emit = defineEmits<{
   (e: 'cancelActivity'): void;
   (e: 'editModeActivity'): void;
-}>();
+}>()
 
 const emitCancelActivity = () => {
   emit('cancelActivity');
