@@ -9,7 +9,7 @@
             <n-input v-model:value="formValueRef.title" placeholder="title" />
         </n-form-item>
         <n-form-item label="description" path="description">
-            <n-input v-model:value="formValueRef.description" placeholder="description" />
+            <n-input type="textarea" v-model:value="formValueRef.description" placeholder="description" />
         </n-form-item>
         <n-form-item label="category" path="category">
             <n-input v-model:value="formValueRef.category" placeholder="category" />
