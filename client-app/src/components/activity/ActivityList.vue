@@ -19,12 +19,13 @@
 
 <script setup lang="ts">
 import type { Activity } from '@/models/Activity';
+import type { PropType } from 'vue';
 
 import { NScrollbar, NCard, NButton, NFlex, NTime } from 'naive-ui';
 
 const {activitys} = defineProps({
     activitys: {
-        type: Array as () => Activity[],
+        type: Array as PropType<Activity[]>,
         required: true
     }
 });

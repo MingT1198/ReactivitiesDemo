@@ -57,11 +57,15 @@ export default defineComponent({
         const activityRef: Ref<Activity | undefined> = ref(undefined);
         const editModeRef: Ref<boolean> = ref(false);
 
-        const globalComponents = inject<Reactive<any>>('globalComponents');
         const isMobile = inject<ComputedRef<boolean>>('isMobile');
 
         const getActivitys = async () => {
-            await axios.get<Activity[]>('/api/activity').then( res => { activitysRef.value = res.data; });
+            await axios.get<Activity[]>('/api/activity').then( res => {
+                activitysRef.value = res.data.map( a => {
+                    a.date = a.date ? new Date(a.date) : undefined;
+                    return a;
+                });
+            });
         }
 
         // Fetch activitys
@@ -70,7 +74,7 @@ export default defineComponent({
                 await getActivitys();
             }
         )();
-
+        
         return {
             activitys: activitysRef,
             activity: activityRef,
@@ -80,7 +84,7 @@ export default defineComponent({
             handleEditModeActivity: ():void => { editModeRef.value = true; },
             handleCancelModeActivity: ():void => {
                 editModeRef.value = false;
-                activityRef.value = undefined;
+                // activityRef.value = undefined;
             },
             handleSelectActivity: (newValue: Activity | undefined):void => {
                 activityRef.value = newValue;
