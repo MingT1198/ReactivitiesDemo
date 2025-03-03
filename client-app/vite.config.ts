@@ -11,12 +11,12 @@ export default defineConfig({
   plugins: [
     vue(),
     // vueDevTools(),
-    // viteSingleFile(),
+    viteSingleFile(),
     legacy({
       targets: ['defaults', 'not IE 11']
     })
   ],
-  base: '/ReactivitiesDemo/',
+  base: '/ReactivitiesDemo/client-app/dist/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
