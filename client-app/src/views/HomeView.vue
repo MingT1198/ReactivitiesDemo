@@ -1,5 +1,5 @@
 <template>
-   <object data="/assets/me.pdf" type="application/pdf" style="width: 100%; height: 100%;">
+   <object data="./assets/me.pdf" type="application/pdf" style="width: 100%; height: 100%;">
    </object>
 </template>
 
