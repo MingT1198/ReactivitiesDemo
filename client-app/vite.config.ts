@@ -16,7 +16,7 @@ export default defineConfig({
       targets: ['defaults', 'not IE 11']
     })
   ],
-  base: '/ReactivitiesDemo/client-app/dist/',
+  base: '/ReactivitiesDemo/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
