@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import type {GlobalTheme, MenuOption, ConfigProviderProps } from 'naive-ui'
-import type { Ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 
 import { Menu as MenuIcon } from '@vicons/ionicons5'
 
@@ -80,10 +80,10 @@ const themeRef: Ref<GlobalTheme> = ref(lightTheme);
 const windowWidthRef: Ref<number> = ref(window.innerWidth);
 const showDrawerRef: Ref<boolean> = ref(false);
 
-const configProviderPropsComputed = computed<ConfigProviderProps>(() => ({
+const configProviderPropsComputed: ComputedRef<ConfigProviderProps> = computed(() => ({
   theme: themeRef.value = isDarkThemeRef.value ? darkTheme : lightTheme
 }));
-const isMobileComputed = computed<boolean>(() => windowWidthRef.value < 768);
+const isMobileComputed: ComputedRef<boolean> = computed(() => windowWidthRef.value < 768);
 
 // 監聽視窗大小變化
 onMounted(() => {

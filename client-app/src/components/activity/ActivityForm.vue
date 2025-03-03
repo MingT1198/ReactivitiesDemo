@@ -11,9 +11,9 @@
         <n-form-item label="description" path="description">
             <n-input type="textarea" v-model:value="formValueRef.description" placeholder="description" />
         </n-form-item>
-        <n-form-item label="category" path="category">
+        <!-- <n-form-item label="category" path="category">
             <n-input v-model:value="formValueRef.category" placeholder="category" />
-        </n-form-item>
+        </n-form-item> -->
         <n-form-item label="city" path="city">
             <n-input v-model:value="formValueRef.city" placeholder="city" />
         </n-form-item>
@@ -45,7 +45,7 @@
     const globalComponents = inject<Reactive<any>>('globalComponents')
 
     const formRef: Ref<FormInst | null> = ref<FormInst | null>(null)
-    const formValueRef: Ref<Activity>  = ref<Activity>({} as Activity)
+    const formValueRef: Ref<Activity> = ref<Activity>({} as Activity)
     const rules = {
         title: {
             required: true,
@@ -80,16 +80,16 @@
 
     const emit = defineEmits<{
         (e: 'cancelModeActivity'): void;
+        (e: 'submitModeActivity', submitValue: Activity): void;
     }>()
     const handleValidateClick = (e: MouseEvent) => {
         e.preventDefault()
         formRef.value?.validate((errors) => {
         if (!errors) {
-            globalComponents.message.success('Valid')
+            emit('submitModeActivity', formValueRef.value)
         }
         else {
-            console.log(errors)
-            globalComponents.message.error('123')
+            globalComponents.message.error(errors[0][0].message)
         }
         })
     }

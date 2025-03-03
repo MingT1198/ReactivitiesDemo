@@ -11,11 +11,13 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@types/uuid": "^10.0.0",
     "@vicons/ionicons5": "^0.13.0",
     "@vicons/material": "^0.13.0",
     "axios": "^1.7.9",
     "moment": "^2.30.1",
     "pinia": "^2.2.6",
+    "uuid": "^11.1.0",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"
   },
