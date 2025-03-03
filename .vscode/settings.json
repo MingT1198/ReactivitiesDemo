@@ -1,1 +1,3 @@
-{}
+{
+    "livePreview.defaultPreviewPath": "/client-app/dist/index.html"
+}
