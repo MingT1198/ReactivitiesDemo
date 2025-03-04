@@ -1,7 +1,7 @@
 <template>
     <n-flex vertical style="max-height: 80vh;">
         <n-button ghost size="small" type="primary" style="flex-grow:1; max-width: 50px;" @click="handleCreateActivity">
-            <template #icon><Create /></template>
+            <template #icon><n-icon><Create /></n-icon></template>
         </n-button>
         <n-flex style="flex-grow:4; justify-content: center;">
             <activity-list style="flex: 3;" :activitys="activities" @select-activity="handleSelectActivity" v-if="activities"/>
@@ -31,7 +31,7 @@ import type { Ref } from 'vue'
 
 import { Create } from '@vicons/ionicons5'
 
-import { NFlex, NButton, NDrawer, NDrawerContent, NModal } from 'naive-ui'
+import { NFlex, NButton, NIcon, NDrawer, NDrawerContent, NModal } from 'naive-ui'
 import { ref, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 

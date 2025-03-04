@@ -12,7 +12,9 @@
               <div v-else >
                 <n-button text @click="() => showDrawerRef=!showDrawerRef">
                   <template #icon>
-                    <MenuIcon />
+                    <n-icon>
+                      <MenuIcon />
+                    </n-icon>
                   </template>
                 </n-button>
                 <n-drawer v-model:show="showDrawerRef" placement="left">
@@ -25,8 +27,10 @@
             <n-flex justify="end" style="height: 100%; flex: 1; align-items: center;">
               <n-button text @click="changeThemeAction">
                 <template #icon>
-                  <DarkModeFilled v-show="!isDarkThemeRef" />
-                  <DarkModeOutlined v-show="isDarkThemeRef" />
+                  <n-icon>
+                    <DarkModeFilled v-show="!isDarkThemeRef" />
+                    <DarkModeOutlined v-show="isDarkThemeRef" />
+                  </n-icon>
                 </template>
               </n-button>
             </n-flex>
@@ -62,6 +66,7 @@ import { NLayout,
   NMenu,
   NConfigProvider,
   NFlex,
+  NIcon,
   NDrawer,
   NDrawerContent,
   NButton,
