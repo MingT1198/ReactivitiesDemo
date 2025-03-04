@@ -22,6 +22,7 @@
 </template>
   
 <script setup lang="ts">
+import type { PropType, ComputedRef } from 'vue';
 import type { Activity } from '@/models/Activity';
 
 import { NCard, NButton, NImage, NTime, NFlex } from 'naive-ui'
@@ -29,12 +30,12 @@ import { computed } from 'vue'
 
 const {activity} = defineProps({
     activity: {
-        type: Object as () => Activity | undefined,
+        type: Object as PropType<Activity> | PropType<undefined>,
         required: true,
     }
 })
 
-const activityComputed = computed<Activity>(() => 
+const activityComputed:ComputedRef<Activity> = computed(() => 
   activity ?? ({} as Activity)
 )
 

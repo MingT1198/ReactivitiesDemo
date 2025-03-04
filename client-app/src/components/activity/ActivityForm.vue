@@ -11,9 +11,9 @@
         <n-form-item label="description" path="description">
             <n-input type="textarea" v-model:value="formValueRef.description" placeholder="description" />
         </n-form-item>
-        <n-form-item label="category" path="category">
+        <!-- <n-form-item label="category" path="category">
             <n-input v-model:value="formValueRef.category" placeholder="category" />
-        </n-form-item>
+        </n-form-item> -->
         <n-form-item label="city" path="city">
             <n-input v-model:value="formValueRef.city" placeholder="city" />
         </n-form-item>
@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
     import type { FormInst } from 'naive-ui'
-    import type { Reactive, Ref } from 'vue'
+    import type { Reactive, Ref, PropType } from 'vue'
     import type { Activity } from '@/models/Activity'
 
     import { NForm, NFormItem, NInput, NButton } from 'naive-ui'
@@ -37,15 +37,15 @@
     
     const prop = defineProps({
         activity: {
-            type: Object as () => Activity | undefined,
+            type: Object as PropType<Activity> | PropType<undefined>,
             required: true,
         }
     })
 
-    const globalComponents = inject<Reactive<any>>('globalComponents')
+    const globalComponents:Reactive<any> = inject('globalComponents')
 
-    const formRef: Ref<FormInst | null> = ref<FormInst | null>(null)
-    const formValueRef: Ref<Activity>  = ref<Activity>({} as Activity)
+    const formRef: Ref<FormInst | null> = ref(null)
+    const formValueRef: Ref<Activity> = ref({} as Activity)
     const rules = {
         title: {
             required: true,
@@ -80,16 +80,16 @@
 
     const emit = defineEmits<{
         (e: 'cancelModeActivity'): void;
+        (e: 'submitModeActivity', submitValue: Activity): void;
     }>()
     const handleValidateClick = (e: MouseEvent) => {
         e.preventDefault()
         formRef.value?.validate((errors) => {
         if (!errors) {
-            globalComponents.message.success('Valid')
+            emit('submitModeActivity', formValueRef.value)
         }
         else {
-            console.log(errors)
-            globalComponents.message.error('123')
+            globalComponents.message.error(errors[0][0].message)
         }
         })
     }
