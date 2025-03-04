@@ -17,7 +17,7 @@
                 </n-modal>
                 <n-drawer :default-width="'90%'" :show="editMode" placement="right">
                     <n-drawer-content>
-                      <activity-form :activity="activity" @cancel-mode-activity="handleCancelModeActivity"/>
+                      <activity-form :activity="activity" @cancel-mode-activity="handleCancelModeActivity" @submit-mode-activity="handleSubmitModeActivity"/>
                   </n-drawer-content>
                 </n-drawer>
             </n-flex>

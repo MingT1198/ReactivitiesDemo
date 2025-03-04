@@ -89,7 +89,7 @@ const configProviderPropsComputed: ComputedRef<ConfigProviderProps> = computed((
   theme: themeRef.value = isDarkThemeRef.value ? darkTheme : lightTheme
 }));
 const isMobileComputed: ComputedRef<boolean> = computed(() => windowWidthRef.value < 768);
-const contentHeight: ComputedRef<object> = computed(() => isMobileComputed.value ? { height: '70vh'} : {height:'85vh'});
+const contentHeight: ComputedRef<object> = computed(() => isMobileComputed.value ? { height: '74vh'} : {height:'84vh'});
 
 // 監聽視窗大小變化
 onMounted(() => {
