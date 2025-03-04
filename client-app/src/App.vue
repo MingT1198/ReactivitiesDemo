@@ -4,12 +4,12 @@
     <n-config-provider :theme="themeRef" :locale="zhTW" :date-locale="dateZhTW">
       <n-layout>
         <n-layout-header bordered style="height: 8vh;">
-          <n-flex justify="space-between" style="padding: 0px 15px;">
-            <n-flex justify="start" style="flex: 3; align-items: center;">
-              <div v-if="!isMobileComputed">
+          <n-flex justify="space-around" style="height: 100%; padding: 0px 15px;">
+            <n-flex justify="start" style="height: 100%; flex: 3; align-items: center;">
+              <div v-if="!isMobileComputed" >
                 <n-menu :options="menuOptions" mode="horizontal" />
               </div>
-              <div v-else>
+              <div v-else >
                 <n-button text @click="() => showDrawerRef=!showDrawerRef">
                   <template #icon>
                     <MenuIcon />
@@ -22,7 +22,7 @@
                 </n-drawer>
               </div>
             </n-flex>
-            <n-flex justify="end" style="flex: 1; align-items: center;">
+            <n-flex justify="end" style="height: 100%; flex: 1; align-items: center;">
               <n-button text @click="changeThemeAction">
                 <template #icon>
                   <DarkModeFilled v-show="!isDarkThemeRef" />
@@ -32,7 +32,7 @@
             </n-flex>
           </n-flex>
         </n-layout-header>
-        <n-layout has-sider style="height: 85vh;">
+        <n-layout has-sider :style="contentHeight">
           <n-layout-content style="width: 100vw;">
               <RouterView />
           </n-layout-content>
@@ -84,6 +84,7 @@ const configProviderPropsComputed: ComputedRef<ConfigProviderProps> = computed((
   theme: themeRef.value = isDarkThemeRef.value ? darkTheme : lightTheme
 }));
 const isMobileComputed: ComputedRef<boolean> = computed(() => windowWidthRef.value < 768);
+const contentHeight: ComputedRef<object> = computed(() => isMobileComputed.value ? { height: '70vh'} : {height:'85vh'});
 
 // 監聽視窗大小變化
 onMounted(() => {
