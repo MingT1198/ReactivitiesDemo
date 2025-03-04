@@ -10,7 +10,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 export default defineConfig({
   plugins: [
     vue(),
-    // vueDevTools(),
+    vueDevTools(),
     viteSingleFile(),
     legacy({
       targets: ['defaults', 'not IE 11']

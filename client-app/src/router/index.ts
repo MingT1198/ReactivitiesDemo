@@ -4,11 +4,11 @@ import { Home } from '@vicons/ionicons5'
 
 import { NIcon } from 'naive-ui'
 import { h } from 'vue'
-import { createRouter, createWebHistory, RouterLink } from 'vue-router'
+import { createRouter, createWebHashHistory, RouterLink } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
