@@ -1,12 +1,12 @@
 using Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Model;
 
 namespace API.Controllers
 {
     public class ActivityController: ApiControllerBase
     {
         private readonly IActivityService _activityService;
-
         public ActivityController(IActivityService activityService)
         {
             _activityService = activityService;
@@ -16,47 +16,27 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                return Ok(await _activityService.GetAsync());
-            }
-            catch (Exception ex)
-            {
-                string errorMeg;
-                if (ex.InnerException != null)
-                {
-                    errorMeg = ex.InnerException.Message;
-                }
-                else
-                {
-                    errorMeg = ex.Message;
-                }
-
-                return BadRequest(errorMeg);
-            }
+            return Ok(await _activityService.GetAsync());
         }
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(Guid Id)
         {
-            try
-            {
-                return Ok(await _activityService.GetByIdAsync(Id));
-            }
-            catch (Exception ex)
-            {
-                string errorMeg;
-                if (ex.InnerException != null)
-                {
-                    errorMeg = ex.InnerException.Message;
-                }
-                else
-                {
-                    errorMeg = ex.Message;
-                }
+            return Ok(await _activityService.GetByIdAsync(Id));
+        }
 
-                return BadRequest(errorMeg);
-            }
+        [HttpPost]
+        public async Task<IActionResult> Post(ActivityModel model)
+        {
+            await _activityService.AddAsync(model);
+            return Ok();
+        }
+
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> Put(Guid Id, ActivityModel model)
+        {
+            await _activityService.PutByIdAsync(Id, model);
+            return Ok();
         }
     }
 }

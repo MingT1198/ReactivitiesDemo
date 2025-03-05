@@ -1,7 +1,7 @@
 using System.Data;
 using Dapper.Contrib.Extensions;
+using Model;
 using Repository.Interfaces;
-using Repository.ViewModels;
 
 namespace Repository
 {
@@ -13,14 +13,23 @@ namespace Repository
             _connection = connection;
             
         }
-        public Task<IEnumerable<ActivityViewModel>> GetAsync()
-        {
-            return _connection.GetAllAsync<ActivityViewModel>();
-        }
 
-        public Task<ActivityViewModel> GetByIdAsync(Guid id)
+
+        public Task<IEnumerable<ActivityModel>> GetAsync()
         {
-            return _connection.GetAsync<ActivityViewModel>(id);
+            return _connection.GetAllAsync<ActivityModel>();
+        }
+        public Task<ActivityModel> GetByIdAsync(Guid id)
+        {
+            return _connection.GetAsync<ActivityModel>(id);
+        }
+        public Task<int> AddAsync(ActivityModel model)
+        {
+            return _connection.InsertAsync(model);
+        }
+        public Task<bool> PutByIdAsync(ActivityModel model)
+        {
+            return _connection.UpdateAsync(model);
         }
     }
 }

@@ -1,11 +1,12 @@
 using Model;
-using Repository.ViewModels;
 
 namespace Service.Interfaces
 {
     public interface IActivityService
     {
-        Task<IEnumerable<ActivityViewModel>> GetAsync();
-        Task<ActivityViewModel> GetByIdAsync(Guid id);
+        Task<IEnumerable<ActivityModel>> GetAsync();
+        Task<ActivityModel> GetByIdAsync(Guid id);
+        Task AddAsync(ActivityModel model);
+        Task PutByIdAsync(Guid id, ActivityModel mode);
     }
 }

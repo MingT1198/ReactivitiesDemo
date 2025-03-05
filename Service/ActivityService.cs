@@ -4,7 +4,6 @@ using Repository.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Repository.Interfaces;
-using Repository.ViewModels;
 
 namespace Service
 {
@@ -13,7 +12,6 @@ namespace Service
         private readonly ILogger<ActivityService> _logger;
         private readonly SqliteDataContext _dbContext;
         private readonly IActivityRepostory _repostory;
-
         public ActivityService(ILogger<ActivityService> logger, SqliteDataContext dbContext, IActivityRepostory repostory)
         {
             _repostory = repostory;
@@ -21,22 +19,41 @@ namespace Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ActivityViewModel>> GetAsync()
+
+        public Task<IEnumerable<ActivityModel>> GetAsync()
         {
             //用entity
             // return await _dbContext.Activitys.ToListAsync();
 
             //用dapper
-            return await _repostory.GetAsync();
+            return _repostory.GetAsync();
         }
 
-        public async Task<ActivityViewModel> GetByIdAsync(Guid id)
+        public Task<ActivityModel> GetByIdAsync(Guid id)
         {
             //用entity
             // return await _dbContext.Activitys.SingleOrDefaultAsync(x => x.Id == id);
 
             //用dapper
-            return await _repostory.GetByIdAsync(id);
+            return _repostory.GetByIdAsync(id);
+        }
+
+        public Task AddAsync(ActivityModel model)
+        {
+            model.Id = Guid.NewGuid();
+            model.Date = DateTime.Now;
+            return _repostory.AddAsync(model);
+        }
+
+        public Task PutByIdAsync(Guid id, ActivityModel model)
+        {
+            if (id != model.Id)
+            {
+                throw new Exception("Id不匹配");
+            }
+
+            model.Date = DateTime.Now;
+            return _repostory.PutByIdAsync(model);
         }
     }
 }

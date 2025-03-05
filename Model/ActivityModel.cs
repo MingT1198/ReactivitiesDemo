@@ -1,20 +1,28 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
+using Dapper.Contrib.Extensions;
 
 namespace Model
 {
     [Table("Activity")]
     public class ActivityModel
     {
-        private string _Id;
+        [Computed]
+        private string _Id{ get; set; }
 
-        [Key]
-        public Guid Id { get => Guid.Parse(_Id); set => _Id = value.ToString(); }
+        [ExplicitKey]
+        public Guid? Id {
+            get => string.IsNullOrWhiteSpace(_Id) ? null : Guid.Parse(_Id);
+            set => _Id = value.Value.ToString();
+        }
 
         public required string Title { get; set; }
 
-        private string _Date;
-        public DateTime? Date { get => string.IsNullOrWhiteSpace(_Date) ? null : DateTime.Parse(_Date); set => _Date = value?.ToString(); }
+        [Computed]
+        private string? _Date{ get; set; }
+        public DateTime? Date {
+            get => string.IsNullOrWhiteSpace(_Date) ? null : DateTime.Parse(_Date);
+            set => _Date = value.Value.ToString();
+        }
 
         public string? Description { get; set; }
 

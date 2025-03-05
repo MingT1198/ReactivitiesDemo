@@ -1,12 +1,14 @@
 using Repository.SeedDatas;
 using API.Extensions;
 using System.Data;
+using API.Filterware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => {
+    options.Filters.Add<CustomExceptionFilter>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -14,7 +16,7 @@ builder.Services.AddSwaggerGen();
 //註冊擴充
 builder.Services.RegisterServices(builder.Configuration);
 
-//中間層
+//建立app
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
