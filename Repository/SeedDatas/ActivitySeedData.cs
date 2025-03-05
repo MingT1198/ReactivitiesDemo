@@ -31,6 +31,13 @@ namespace Repository.SeedDatas
             else
             {
                 var tableName = attribute.Name;
+                if (connection.ExecuteScalar<int>($"select count(name) from sqlite_master where type='table' and name='{tableName}'") == 0)
+                {
+                    connection.Execute(@$"
+                        create table {tableName} 
+                        (Id text not null primary key, Title text, Date text, Description text, Category text, City text, Venue text)
+                    ");
+                }
                 if (connection.ExecuteScalar<int>($"select count(*) from {tableName}") > 0) return;
             }
             
@@ -47,6 +54,7 @@ namespace Repository.SeedDatas
             {
                 new ActivityModel
                 {
+                    Id = Guid.NewGuid(),
                     Title = "Past Activity 1",
                     Date = DateTime.UtcNow.AddMonths(-2),
                     Description = "Activity 2 months ago",
@@ -56,6 +64,7 @@ namespace Repository.SeedDatas
                 },
                 new ActivityModel
                 {
+                    Id = Guid.NewGuid(),
                     Title = "Past Activity 2",
                     Date = DateTime.UtcNow.AddMonths(-1),
                     Description = "Activity 1 month ago",
@@ -65,6 +74,7 @@ namespace Repository.SeedDatas
                 },
                 new ActivityModel
                 {
+                    Id = Guid.NewGuid(),
                     Title = "Future Activity 2",
                     Date = DateTime.UtcNow.AddMonths(2),
                     Description = "Activity 2 months in future",
@@ -74,6 +84,7 @@ namespace Repository.SeedDatas
                 },
                 new ActivityModel
                 {
+                    Id = Guid.NewGuid(),
                     Title = "Future Activity 7",
                     Date = DateTime.UtcNow.AddMonths(7),
                     Description = "Activity 2 months ago",
@@ -83,6 +94,7 @@ namespace Repository.SeedDatas
                 },
                 new ActivityModel
                 {
+                    Id = Guid.NewGuid(),
                     Title = "Future Activity 8",
                     Date = DateTime.UtcNow.AddMonths(8),
                     Description = "Activity 8 months in future",
