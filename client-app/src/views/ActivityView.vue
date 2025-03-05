@@ -62,12 +62,16 @@ const handleCreateActivity = ():void => {
 const handleSubmitModeActivity = async (submitValue: Activity) => {
     editMode.value = false
     activity.value = undefined
-    await axios.post('/api/activity', submitValue)
+    if(submitValue.id){
+        await axios.put(`/activity/${submitValue.id}`, submitValue)
+    }else{
+        await axios.post('/activity', submitValue)
+    }
     await getActivitys()
 }
 
 const getActivitys = async () => {
-    await axios.get<Activity[]>('/api/activity').then( res => {
+    await axios.get<Activity[]>('/activity').then( res => {
         activitys.value = res.data.map( a => {
             a.date = a.date ? new Date(a.date) : undefined
             return a

@@ -5,11 +5,19 @@
                 <n-button ghost size="small" type="info" @click="emitSelectActivity(activity.id)">View</n-button>
             </template>
             <n-flex vertical>
-                <div>
+                <div v-if="activity.description">
                     {{ activity.description }}
                 </div>
-                <div>
-                    {{ activity.city }}, {{ activity.venue }}
+                <div v-if="activity.city || activity.venue">
+                    <template v-if="activity.city && activity.venue">
+                        {{ activity.city }}, {{ activity.venue }}
+                    </template>
+                    <template v-else-if="activity.city">
+                        {{ activity.city }}
+                    </template>
+                    <template v-else-if="activity.venue">
+                        {{ activity.venue }}
+                    </template>
                 </div>
                 <n-time :time="activity.date" />
             </n-flex>
@@ -18,21 +26,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Activity } from '@/models/Activity';
-import type { PropType } from 'vue';
+import type { Activity } from '@/models/Activity'
+import type { PropType } from 'vue'
 
-import { NScrollbar, NCard, NButton, NFlex, NTime } from 'naive-ui';
+import { NScrollbar, NCard, NButton, NFlex, NTime } from 'naive-ui'
 
 const {activitys} = defineProps({
     activitys: {
         type: Array as PropType<Activity[]>,
         required: true
     }
-});
+})
 
 const emit = defineEmits<{
   (e: 'selectActivity', newValue: Activity | undefined): void
-}>();
+}>()
 const emitSelectActivity = (id: string):void => {
   const activity: Activity | undefined = activitys.find(a => a.id === id)
   emit('selectActivity', activity)

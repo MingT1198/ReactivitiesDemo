@@ -78,30 +78,31 @@ import { NLayout,
 import { routerHelper } from './router'
 import { RouterView } from 'vue-router'
 import { ref, computed, reactive, provide, onMounted, onUnmounted } from 'vue'
+import axios from 'axios'
 
-const menuOptions: MenuOption[] = routerHelper.getMenu();
-const isDarkThemeRef: Ref<boolean> = ref(false);
-const themeRef: Ref<GlobalTheme> = ref(lightTheme);
-const windowWidthRef: Ref<number> = ref(window.innerWidth);
-const showDrawerRef: Ref<boolean> = ref(false);
+const menuOptions: MenuOption[] = routerHelper.getMenu()
+const isDarkThemeRef: Ref<boolean> = ref(false)
+const themeRef: Ref<GlobalTheme> = ref(lightTheme)
+const windowWidthRef: Ref<number> = ref(window.innerWidth)
+const showDrawerRef: Ref<boolean> = ref(false)
 
 const configProviderPropsComputed: ComputedRef<ConfigProviderProps> = computed(() => ({
   theme: themeRef.value = isDarkThemeRef.value ? darkTheme : lightTheme
-}));
-const isMobileComputed: ComputedRef<boolean> = computed(() => windowWidthRef.value < 768);
-const contentHeight: ComputedRef<object> = computed(() => isMobileComputed.value ? { height: '74vh'} : {height:'84vh'});
+}))
+const isMobileComputed: ComputedRef<boolean> = computed(() => windowWidthRef.value < 768)
+const contentHeight: ComputedRef<object> = computed(() => isMobileComputed.value ? { height: '74vh'} : {height:'84vh'})
 
 // 監聽視窗大小變化
 onMounted(() => {
   window.addEventListener('resize', () => {
     windowWidthRef.value = window.innerWidth
-  });
-});
+  })
+})
 onUnmounted(() => {
   window.removeEventListener('resize', () => {
     windowWidthRef.value = window.innerWidth
-  });
-});
+  })
+})
 
 //建立脫離n-xxx-provider的物件
 const { message, notification, loadingBar, modal } = createDiscreteApi(
@@ -109,18 +110,37 @@ const { message, notification, loadingBar, modal } = createDiscreteApi(
   {
     configProviderProps: configProviderPropsComputed
   }
-);
+)
 // 創建響應式全域物件
 const globalComponents = reactive({
     message, notification, loadingBar, modal
-});
+})
+//設定axios
+axios.defaults.baseURL = '/api'
+axios.interceptors.response.use(
+    (response: any) => {
+        return response
+    },
+    (error: any) => {
+        modal.create({
+            title: 'error',
+            preset: 'card',
+            bordered: true,
+            style: { width: '30%' },
+            content: error.response.data.exception,
+        })
+        return Promise.reject(error)
+    }
+)
+
+
 // 提供全域物件
-provide('globalComponents', globalComponents);
-provide('isMobile', isMobileComputed);
+provide('globalComponents', globalComponents)
+provide('isMobile', isMobileComputed)
 
 const changeThemeAction = (): void => {
-  isDarkThemeRef.value = !isDarkThemeRef.value;
-};
+  isDarkThemeRef.value = !isDarkThemeRef.value
+}
 
 </script>
 
