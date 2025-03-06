@@ -45,9 +45,10 @@ namespace Service
             return _repostory.AddAsync(model);
         }
 
-        public Task PutByIdAsync(Guid id, ActivityModel model)
+        public async Task<Task> PutByIdAsync(Guid id, ActivityModel model)
         {
-            if (id != model.Id)
+            var orgModel =  await _repostory.GetByIdAsync(id);
+            if (orgModel.Id != model.Id)
             {
                 throw new Exception("Id不匹配");
             }
@@ -55,14 +56,15 @@ namespace Service
             model.Date = DateTime.Now;
             return _repostory.PutByIdAsync(model);
         }
-        public Task DeleteByIdAsync(Guid id, ActivityModel model)
+        public async Task<Task> DeleteByIdAsync(Guid id)
         {
-            if (id != model.Id)
+            var orgModel =  await _repostory.GetByIdAsync(id);
+            if (orgModel == null)
             {
                 throw new Exception("Id不匹配");
             }
 
-            return _repostory.DeleteByIdAsync(model);
+            return _repostory.DeleteByIdAsync(orgModel);
         }
     }
 }

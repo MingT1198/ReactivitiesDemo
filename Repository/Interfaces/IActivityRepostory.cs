@@ -6,8 +6,8 @@ namespace Repository.Interfaces
     {
         Task<IEnumerable<ActivityModel>> GetAsync();
         Task<ActivityModel> GetByIdAsync(Guid id);
-        Task<int> AddAsync(ActivityModel model);
-        Task<bool> PutByIdAsync(ActivityModel model);
-        Task<bool> DeleteByIdAsync(ActivityModel model);
+        Task AddAsync(ActivityModel model);
+        Task PutByIdAsync(ActivityModel model);
+        Task DeleteByIdAsync(ActivityModel model);
     }
 }

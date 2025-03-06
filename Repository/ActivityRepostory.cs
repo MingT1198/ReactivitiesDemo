@@ -23,15 +23,15 @@ namespace Repository
         {
             return _connection.GetAsync<ActivityModel>(id);
         }
-        public Task<int> AddAsync(ActivityModel model)
+        public Task AddAsync(ActivityModel model)
         {
             return _connection.InsertAsync(model);
         }
-        public Task<bool> PutByIdAsync(ActivityModel model)
+        public Task PutByIdAsync(ActivityModel model)
         {
             return _connection.UpdateAsync(model);
         }
-        public Task<bool> DeleteByIdAsync(ActivityModel model)
+        public Task DeleteByIdAsync(ActivityModel model)
         {
             return _connection.DeleteAsync(model);
         }
