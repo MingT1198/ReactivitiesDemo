@@ -4,7 +4,7 @@
             <template #icon><n-icon><Create /></n-icon></template>
         </n-button>
         <n-flex style="flex-grow:4; justify-content: center;">
-            <activity-list style="flex: 3;" :activitys="activitys" @select-activity="handleSelectActivity" v-if="activitys"/>
+            <activity-list style="flex: 3;" :activitys="activitys" @select-activity="handleSelectActivity" @delete-activity="handleDeleteModeActivity" v-if="activitys"/>
 
             <n-flex vertical style="flex: 2; padding: 5px;" v-if="(activity || editMode) && !isMobile">
                 <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity" v-if="activity && !editMode"/>
@@ -51,8 +51,8 @@ const handleCancelModeActivity = ():void => {
     activity.value = undefined
 
 }
-const handleSelectActivity = (newValue: Activity | undefined):void => {
-    activity.value = newValue
+const handleSelectActivity = (id: string):void => {
+    activity.value = activitys.value!.find(a => a.id === id)
     editMode.value = false
 }
 const handleCreateActivity = ():void => {
@@ -67,6 +67,12 @@ const handleSubmitModeActivity = async (submitValue: Activity) => {
     }else{
         await axios.post('/activity', submitValue)
     }
+    await getActivitys()
+}
+const handleDeleteModeActivity = async (id: string) => {
+    editMode.value = false
+    activity.value = undefined
+    await axios.delete(`/activity/${id}`)
     await getActivitys()
 }
 

@@ -16,7 +16,7 @@ const content: Ref<string> = ref(`
 # 技術說明
 
 ## 前端
-- **框架**: Vue 3 (JavaScript)
+- **框架**: Vue 3 + TypeJavaScript
 - **UI 元件庫**: Naive UI
 - **MarkDown**: md-editor-v3
 

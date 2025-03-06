@@ -2,6 +2,7 @@
     <n-scrollbar style="max-height: 73vh;">
         <n-card :title="activity.title" v-for="activity in activitys" :key="activity.id">
             <template #header-extra>
+                <n-button ghost size="small" type="error" @click="emitDeleteActivity(activity.id)">Delete</n-button>
                 <n-button ghost size="small" type="info" @click="emitSelectActivity(activity.id)">View</n-button>
             </template>
             <n-flex vertical>
@@ -39,11 +40,14 @@ const {activitys} = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'selectActivity', newValue: Activity | undefined): void
+  (e: 'selectActivity', id: string ): void
+  (e: 'deleteActivity', id: string ): void
 }>()
 const emitSelectActivity = (id: string):void => {
-  const activity: Activity | undefined = activitys.find(a => a.id === id)
-  emit('selectActivity', activity)
+  emit('selectActivity', id)
+}
+const emitDeleteActivity = (id: string):void => {
+  emit('deleteActivity', id)
 }
 </script>
 
