@@ -2,14 +2,23 @@
     <n-scrollbar style="max-height: 73vh;">
         <n-card :title="activity.title" v-for="activity in activitys" :key="activity.id">
             <template #header-extra>
+                <n-button ghost size="small" type="error" @click="emitDeleteActivity(activity.id)">Delete</n-button>
                 <n-button ghost size="small" type="info" @click="emitSelectActivity(activity.id)">View</n-button>
             </template>
             <n-flex vertical>
-                <div>
+                <div v-if="activity.description">
                     {{ activity.description }}
                 </div>
                 <div>
-                    {{ activity.city }}, {{ activity.venue }}
+                    <template v-if="activity.city && activity.venue">
+                        {{ activity.city }}, {{ activity.venue }}
+                    </template>
+                    <template v-else-if="activity.city">
+                        {{ activity.city }}
+                    </template>
+                    <template v-else-if="activity.venue">
+                        {{ activity.venue }}
+                    </template>
                 </div>
                 <n-time :time="activity.date" />
             </n-flex>
@@ -31,11 +40,14 @@ const {activitys} = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: 'selectActivity', newValue: Activity | undefined): void
+  (e: 'selectActivity', newValue: string): void,
+  (e: 'deleteActivity', newValue: string): void,
 }>();
 const emitSelectActivity = (id: string):void => {
-  const activity: Activity | undefined = activitys.find(a => a.id === id)
-  emit('selectActivity', activity)
+  emit('selectActivity', id)
+}
+const emitDeleteActivity = (id: string):void => {
+  emit('deleteActivity', id)
 }
 </script>
 

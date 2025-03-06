@@ -4,7 +4,7 @@
         <n-image
             v-if="!(activityComputed.category == null || activityComputed.category == undefined)"
             :object-fit="'contain'"
-            :src="`/assets/categoryImages/${activityComputed.category}.jpg`"
+            :src="`${import.meta.env.BASE_URL}/assets/categoryImages/${activityComputed.category}.jpg`"
         >
         </n-image>
       </template>
@@ -23,6 +23,7 @@
   
 <script setup lang="ts">
 import type { Activity } from '@/models/Activity';
+import type { ComputedRef } from 'vue'
 
 import { NCard, NButton, NImage, NTime, NFlex } from 'naive-ui'
 import { computed } from 'vue'
@@ -34,7 +35,7 @@ const {activity} = defineProps({
     }
 })
 
-const activityComputed = computed<Activity>(() => 
+const activityComputed:ComputedRef<Activity> = computed(() => 
   activity ?? ({} as Activity)
 )
 

@@ -19,22 +19,20 @@ export const useActivityStore = defineStore('activity', () => {
     }
 
     activityData.date = new Date()
-
+    
     if (activities.value.find(a => a.id === activityData.id)) {
-      for (let i = 0; i < activities.value.length; i++) {
-        if (activities.value[i].id === activityData.id) {
-          activities.value[i] = activityData
-        }
-      }
+      activities.value = [...activities.value.filter(a => a.id !== activityData.id), activityData]
     } else {
-      activityData.id = uuidv4()
-      activities.value.push(activityData)
+      activities.value = [...activities.value, {...activityData, id: uuidv4()}]
     }
   }
 
+  const deleteActivity = (id: string):void => { activities.value = activities.value!.filter(a => a.id !== id) }
+
   return {
     activities,
-    setActivity
+    setActivity,
+    deleteActivity
   }
 })
 

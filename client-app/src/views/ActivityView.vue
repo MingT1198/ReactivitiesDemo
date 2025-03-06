@@ -4,7 +4,7 @@
             <template #icon><n-icon><Create /></n-icon></template>
         </n-button>
         <n-flex style="flex-grow:4; justify-content: center;">
-            <activity-list style="flex: 3;" :activitys="activities" @select-activity="handleSelectActivity" v-if="activities"/>
+            <activity-list style="flex: 3;" :activitys="activities" @select-activity="handleSelectActivity" @delete-activity="handleDeleteActivity" v-if="activities"/>
 
             <n-flex vertical style="flex: 2; padding: 5px;" v-if="(activity || editMode) && !isMobile">
                 <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity" v-if="activity && !editMode"/>
@@ -56,9 +56,12 @@ const handleSubmitModeActivity = (submitValue: Activity):void => {
     activityStore.setActivity(submitValue)
 }
 
-const handleSelectActivity = (newValue: Activity | undefined):void => {
-    activity.value = newValue
+const handleSelectActivity = (id: string):void => {
+    activity.value = activities.value?.find(a => a.id === id)
     editMode.value = false
+}
+const handleDeleteActivity = (id: string):void => {
+    activityStore.deleteActivity(id)
 }
 const handleCreateActivity = ():void => {
     editMode.value = true

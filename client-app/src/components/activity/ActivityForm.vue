@@ -42,10 +42,10 @@
         }
     })
 
-    const globalComponents = inject<Reactive<any>>('globalComponents')
+    const globalComponents:Reactive<any> = inject('globalComponents')
 
-    const formRef: Ref<FormInst | null> = ref<FormInst | null>(null)
-    const formValueRef: Ref<Activity> = ref<Activity>({} as Activity)
+    const formRef: Ref<FormInst | null> = ref(null)
+    const formValueRef: Ref<Activity> = ref({} as Activity)
     const rules = {
         title: {
             required: true,
@@ -75,7 +75,7 @@
     }
 
     watch(() => prop.activity, (newValue) => {
-        formValueRef.value = newValue ? JSON.parse(JSON.stringify(newValue)) : ({} as Activity)
+        formValueRef.value = newValue ? {...newValue} : {} as Activity
     }, { immediate: true })
 
     const emit = defineEmits<{
