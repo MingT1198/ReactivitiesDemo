@@ -31,5 +31,9 @@ namespace Repository
         {
             return _connection.UpdateAsync(model);
         }
+        public Task<bool> DeleteByIdAsync(ActivityModel model)
+        {
+            return _connection.DeleteAsync(model);
+        }
     }
 }

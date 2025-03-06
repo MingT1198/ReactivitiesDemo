@@ -55,5 +55,14 @@ namespace Service
             model.Date = DateTime.Now;
             return _repostory.PutByIdAsync(model);
         }
+        public Task DeleteByIdAsync(Guid id, ActivityModel model)
+        {
+            if (id != model.Id)
+            {
+                throw new Exception("Id不匹配");
+            }
+
+            return _repostory.DeleteByIdAsync(model);
+        }
     }
 }

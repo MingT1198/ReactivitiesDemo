@@ -8,5 +8,6 @@ namespace Service.Interfaces
         Task<ActivityModel> GetByIdAsync(Guid id);
         Task AddAsync(ActivityModel model);
         Task PutByIdAsync(Guid id, ActivityModel mode);
+        Task DeleteByIdAsync(Guid id, ActivityModel mode);
     }
 }
