@@ -8,7 +8,7 @@
 
             <n-flex vertical style="flex: 2; padding: 5px;" v-if="(activity || editMode) && !isMobile">
                 <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity" v-if="activity && !editMode"/>
-                <activity-form :activity="activity" @cancel-mode-activity="handleCancelModeActivity" @submit-mode-activity="handleSubmitModeActivity" v-if="editMode"/>
+                <activity-form :activity="activity" :isSubmit="isSubmit" @cancel-mode-activity="handleCancelModeActivity" @submit-mode-activity="handleSubmitModeActivity" v-if="editMode"/>
             </n-flex>
 
             <n-flex vertical style="flex: 2;" v-else-if="(activity || editMode) && isMobile">
@@ -17,7 +17,7 @@
                 </n-modal>
                 <n-drawer :default-width="'90%'" :show="editMode" placement="right">
                     <n-drawer-content>
-                      <activity-form :activity="activity" @cancel-mode-activity="handleCancelModeActivity" @submit-mode-activity="handleSubmitModeActivity"/>
+                      <activity-form :activity="activity" :isSubmit="isSubmit" @cancel-mode-activity="handleCancelModeActivity" @submit-mode-activity="handleSubmitModeActivity"/>
                   </n-drawer-content>
                 </n-drawer>
             </n-flex>
@@ -28,69 +28,85 @@
 <script setup lang="ts">
 import type { Activity } from '@/models/Activity'
 import type { Ref } from 'vue'
+import type { LoadingBarApi } from 'naive-ui'
 
 import { Create } from '@vicons/ionicons5'
 
+import { v4 as uuidv4 } from 'uuid'
 import { NFlex, NButton, NIcon, NDrawer, NDrawerContent, NModal } from 'naive-ui'
 import { ref, inject } from 'vue'
-import axios from 'axios';
+import agent from '@/api/agent'
 
 import ActivityList from '@/components/activity/ActivityList.vue'
 import ActivityDital from '@/components/activity/ActivityDital.vue'
 import ActivityForm from '@/components/activity/ActivityForm.vue'
 
-const activitys: Ref<Activity[]| null> = ref(null);
-const activity: Ref<Activity | undefined> = ref(undefined)
+const activitys: Ref<Activity[]> = ref([]);
+const activity: Ref<Activity | undefined> = ref()
 const editMode: Ref<boolean> = ref(false)
+const isSubmit: Ref<boolean> = ref(false)
 const isMobile: Ref<boolean> = inject('isMobile', ref(false))
+const loadingBar: LoadingBarApi = (inject<any>('globalComponents')).loadingBar
 
-const handleCancelActivity = ():void => { activity.value = undefined }
-const handleEditModeActivity = ():void => { editMode.value = true }
-const handleCancelModeActivity = ():void => {
+const handleCancelActivity = () => { activity.value = undefined }
+const handleEditModeActivity = () => { editMode.value = true }
+const handleCancelModeActivity = () => {
     editMode.value = false
     activity.value = undefined
 
 }
-const handleSelectActivity = (id: string):void => {
-    activity.value = activitys.value!.find(a => a.id === id)
-    editMode.value = false
+const handleSelectActivity = (id: string) => {
+    agent.Activities.detail(id).then( res => {
+        activity.value = {...res }
+        editMode.value = false
+    })
 }
-const handleCreateActivity = ():void => {
+const handleCreateActivity = () => {
     editMode.value = true
     activity.value = undefined
 }
-const handleSubmitModeActivity = async (submitValue: Activity) => {
-    editMode.value = false
-    activity.value = undefined
+const handleSubmitModeActivity = (submitValue: Activity) => {
+    isSubmit.value = true
     if(submitValue.id){
-        await axios.put(`/activity/${submitValue.id}`, submitValue)
+        agent.Activities.update(submitValue.id, submitValue).then(()=>{
+            activitys.value = [submitValue, ...activitys.value.filter(a => a.id !== submitValue.id)]
+            submitFinishAndSetActivity(submitValue)
+        })
     }else{
-        await axios.post('/activity', submitValue)
+        submitValue.id = uuidv4()
+        agent.Activities.create(submitValue).then(() => {
+            activitys.value.unshift(submitValue)
+            submitFinishAndSetActivity(submitValue)
+        })
     }
-    await getActivitys()
 }
-const handleDeleteModeActivity = async (id: string) => {
+const handleDeleteModeActivity = (id: string) => {
+    agent.Activities.delete(id).then(() => {
+        const index = activitys.value.findIndex(a => a.id === id)
+        activitys.value = activitys.value.filter((a)=> a.id !== id)
+        if(activity.value && activity.value.id === id){
+            activity.value = undefined
+        }
+    })
+}
+
+const submitFinishAndSetActivity = (value: Activity | undefined) => {
     editMode.value = false
-    activity.value = undefined
-    await axios.delete(`/activity/${id}`)
-    await getActivitys()
+    activity.value = value
+    isSubmit.value = false
 }
 
-const getActivitys = async () => {
-    await axios.get<Activity[]>('/activity').then( res => {
-        activitys.value = res.data.map( a => {
-            a.date = a.date ? new Date(a.date) : undefined
-            return a
-        });
-    });
-}
-
-// Fetch activitys
+//init
 (
-    async()=>{
-        await getActivitys()
+    () => {
+        loadingBar.start()
+        agent.Activities.list().then( res => {
+            activitys.value = res
+            loadingBar.finish()
+        })
     }
-)();
+)()
+
 
 </script>
 

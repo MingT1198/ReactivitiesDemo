@@ -78,7 +78,7 @@ import { NLayout,
 import { routerHelper } from './router'
 import { RouterView } from 'vue-router'
 import { ref, computed, reactive, provide, onMounted, onUnmounted } from 'vue'
-import axios from 'axios'
+import { setInterceptorsResponse } from '@/api/agent'
 
 const menuOptions: MenuOption[] = routerHelper.getMenu()
 const isDarkThemeRef: Ref<boolean> = ref(false)
@@ -115,25 +115,6 @@ const { message, notification, loadingBar, modal } = createDiscreteApi(
 const globalComponents = reactive({
     message, notification, loadingBar, modal
 })
-//設定axios
-axios.defaults.baseURL = '/api'
-axios.interceptors.response.use(
-    (response: any) => {
-        return response
-    },
-    (error: any) => {
-        modal.create({
-            title: 'error',
-            preset: 'card',
-            bordered: true,
-            style: { width: '30%' },
-            content: error.response.data.exception,
-        })
-        return Promise.reject(error)
-    }
-)
-
-
 // 提供全域物件
 provide('globalComponents', globalComponents)
 provide('isMobile', isMobileComputed)
@@ -142,6 +123,24 @@ const changeThemeAction = (): void => {
   isDarkThemeRef.value = !isDarkThemeRef.value
 }
 
+//設定攔截器
+setInterceptorsResponse(
+  (response: any) => {
+    loadingBar.finish()
+    return response
+  },
+  (error: any) => {
+    loadingBar.finish()
+    modal.create({
+        title: 'error',
+        preset: 'card',
+        bordered: true,
+        style: { width: '30%' },
+        content: error.response.data.exception,
+    })
+    return Promise.reject(error)
+  }
+)
 </script>
 
 <style scoped>

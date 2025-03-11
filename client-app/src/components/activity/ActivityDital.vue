@@ -10,7 +10,7 @@
       </template>
       {{ activityComputed.description }}
       <template #footer>
-        <n-time :time="activityComputed.date" />
+        <n-time type="date" :time="activityComputed.date ? new Date(activityComputed.date) : undefined" />
       </template>
       <template #action>
         <n-flex>

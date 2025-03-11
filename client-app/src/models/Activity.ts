@@ -1,7 +1,7 @@
 export type Activity = {
     id: string;
     title: string;
-    date: Date| undefined;
+    date: string| null;
     description: string | null;
     category: string | null;
     city: string | null;

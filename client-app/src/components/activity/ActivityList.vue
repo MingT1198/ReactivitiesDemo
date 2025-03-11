@@ -20,7 +20,7 @@
                         {{ activity.venue }}
                     </template>
                 </div>
-                <n-time :time="activity.date" />
+                <n-time type="date" :time="activity.date ? moment(activity.date).local().toDate() : undefined" />
             </n-flex>
         </n-card>
     </n-scrollbar>
@@ -31,6 +31,7 @@ import type { Activity } from '@/models/Activity'
 import type { PropType } from 'vue'
 
 import { NScrollbar, NCard, NButton, NFlex, NTime } from 'naive-ui'
+import moment from 'moment'
 
 const {activitys} = defineProps({
     activitys: {
