@@ -40,8 +40,8 @@ namespace Service
 
         public Task AddAsync(ActivityModel model)
         {
-            model.Id = Guid.NewGuid();
-            model.Date = DateTime.Now;
+            model.Id = model.Id ?? Guid.NewGuid();
+
             return _repostory.AddAsync(model);
         }
 
@@ -53,7 +53,6 @@ namespace Service
                 throw new Exception("Id不匹配");
             }
 
-            model.Date = DateTime.Now;
             return _repostory.PutByIdAsync(model);
         }
         public async Task<Task> DeleteByIdAsync(Guid id)
