@@ -4,7 +4,7 @@
         <n-image
             v-if="!(activityComputed.category == null || activityComputed.category == undefined)"
             :object-fit="'contain'"
-            :src="`${import.meta.env.BASE_URL}/assets/categoryImages/${activityComputed.category}.jpg`"
+            :src="`${baseUrl}/assets/categoryImages/${activityComputed.category}.jpg`"
         >
         </n-image>
       </template>
@@ -35,6 +35,7 @@ const {activity} = defineProps({
     }
 })
 
+const baseUrl: ComputedRef<string> = computed(() => import.meta.env.BASE_URL)
 const activityComputed:ComputedRef<Activity> = computed(() => 
   activity ?? ({} as Activity)
 )

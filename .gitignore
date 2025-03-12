@@ -400,3 +400,6 @@ FodyWeavers.xsd
 *.sln.iml
 API/Reactivities.db-wal
 API/Reactivities.db-shm
+
+# DB
+*.db
