@@ -4,7 +4,7 @@
             <template #icon><n-icon><Create /></n-icon></template>
         </n-button>
         <n-flex style="flex-grow:4; justify-content: center;">
-            <activity-list style="flex: 3;" :activitys="activitys" :is-submit="isSubmit" @select-activity="handleSelectActivity" @delete-activity="handleDeleteModeActivity" v-if="activitys"/>
+            <activity-list style="flex: 3;" :activitys="Array.from( activitys.values() )" :is-submit="isSubmit" @select-activity="handleSelectActivity" @delete-activity="handleDeleteModeActivity" v-if="activitys"/>
 
             <n-flex vertical style="flex: 2; padding: 5px;" v-if="(activity || editMode) && !isMobile">
                 <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity" v-if="activity && !editMode"/>
@@ -41,7 +41,7 @@ import ActivityList from '@/components/activity/ActivityList.vue'
 import ActivityDital from '@/components/activity/ActivityDital.vue'
 import ActivityForm from '@/components/activity/ActivityForm.vue'
 
-const activitys: Ref<Activity[]> = ref([]);
+const activitys: Ref<Map<string, Activity>> = ref(new Map());
 const activity: Ref<Activity | undefined> = ref()
 const editMode: Ref<boolean> = ref(false)
 const isSubmit: Ref<boolean> = ref(false)
@@ -61,7 +61,7 @@ const handleSelectActivity = (id: string) => {
     //     editMode.value = false
     // })
 
-    activity.value = activitys.value.find(e => e.id === id)
+    activity.value = activitys.value.get(id)
     editMode.value = false
 }
 const handleCreateActivity = () => {
@@ -72,13 +72,13 @@ const handleSubmitModeActivity = (submitValue: Activity) => {
     isSubmit.value = true
     if(submitValue.id){
         agent.Activities.update(submitValue.id, submitValue).then(()=>{
-            activitys.value = [submitValue, ...activitys.value.filter(a => a.id !== submitValue.id)]
+            activitys.value.set(submitValue.id, submitValue)
             submitFinishAndSetActivity(submitValue)
         })
     }else{
         submitValue.id = uuidv4()
         agent.Activities.create(submitValue).then(() => {
-            activitys.value.unshift(submitValue)
+            activitys.value.set(submitValue.id, submitValue)
             submitFinishAndSetActivity(submitValue)
         })
     }
@@ -87,7 +87,7 @@ const handleDeleteModeActivity = (id: string) => {
     isSubmit.value = true
     agent.Activities.delete(id).then(() => {
         submitFinishAndSetActivity(undefined)
-        activitys.value = activitys.value.filter((a)=> a.id !== id)
+        activitys.value.delete(id)
     })
 }
 
@@ -102,7 +102,7 @@ const submitFinishAndSetActivity = (value: Activity | undefined) => {
     () => {
         loadingBar.start()
         agent.Activities.list().then( res => {
-            activitys.value = res
+            res.forEach((a) => activitys.value.set(a.id, a))
             loadingBar.finish()
         })
     }
