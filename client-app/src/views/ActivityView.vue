@@ -4,7 +4,7 @@
             <template #icon><n-icon><Create /></n-icon></template>
         </n-button>
         <n-flex style="flex-grow:4; justify-content: center;">
-            <activity-list style="flex: 3;" :activitys="activitys" @select-activity="handleSelectActivity" @delete-activity="handleDeleteModeActivity" v-if="activitys"/>
+            <activity-list style="flex: 3;" :activitys="activitys" :is-submit="isSubmit" @select-activity="handleSelectActivity" @delete-activity="handleDeleteModeActivity" v-if="activitys"/>
 
             <n-flex vertical style="flex: 2; padding: 5px;" v-if="(activity || editMode) && !isMobile">
                 <activity-dital :activity="activity" @cancel-activity="handleCancelActivity" @edit-mode-activity="handleEditModeActivity" v-if="activity && !editMode"/>
@@ -56,10 +56,13 @@ const handleCancelModeActivity = () => {
 
 }
 const handleSelectActivity = (id: string) => {
-    agent.Activities.detail(id).then( res => {
-        activity.value = {...res }
-        editMode.value = false
-    })
+    // agent.Activities.detail(id).then( res => {
+    //     activity.value = {...res }
+    //     editMode.value = false
+    // })
+
+    activity.value = activitys.value.find(e => e.id === id)
+    editMode.value = false
 }
 const handleCreateActivity = () => {
     editMode.value = true
@@ -81,12 +84,10 @@ const handleSubmitModeActivity = (submitValue: Activity) => {
     }
 }
 const handleDeleteModeActivity = (id: string) => {
+    isSubmit.value = true
     agent.Activities.delete(id).then(() => {
-        const index = activitys.value.findIndex(a => a.id === id)
+        submitFinishAndSetActivity(undefined)
         activitys.value = activitys.value.filter((a)=> a.id !== id)
-        if(activity.value && activity.value.id === id){
-            activity.value = undefined
-        }
     })
 }
 

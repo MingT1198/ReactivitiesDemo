@@ -2,7 +2,7 @@
     <n-scrollbar style="max-height: 73vh;">
         <n-card :title="activity.title" v-for="activity in activitys" :key="activity.id">
             <template #header-extra>
-                <n-button ghost size="small" type="error" @click="emitDeleteActivity(activity.id)">Delete</n-button>
+                <n-button :name="activity.id" :loading="isSubmit && targetId === activity.id" ghost size="small" type="error" @click="(event) => handleDelete(activity.id, event)">Delete</n-button>
                 <n-button ghost size="small" type="info" @click="emitSelectActivity(activity.id)">View</n-button>
             </template>
             <n-flex vertical>
@@ -28,17 +28,28 @@
 
 <script setup lang="ts">
 import type { Activity } from '@/models/Activity'
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 
 import { NScrollbar, NCard, NButton, NFlex, NTime } from 'naive-ui'
+import { ref } from 'vue'
 import moment from 'moment'
 
 const {activitys} = defineProps({
     activitys: {
         type: Array as PropType<Activity[]>,
         required: true
+    },
+    isSubmit: {
+        type: Boolean,
+        required: true
     }
 })
+
+const targetId: Ref<string> = ref("")
+const handleDelete = (id:string, event: MouseEvent):void => {
+    targetId.value = (event.target as HTMLButtonElement).name;
+    emitDeleteActivity(id)
+}
 
 const emit = defineEmits<{
   (e: 'selectActivity', id: string ): void
