@@ -33,17 +33,9 @@ import type { PropType, Ref } from 'vue'
 import { NScrollbar, NCard, NButton, NFlex, NTime } from 'naive-ui'
 import { ref } from 'vue'
 import moment from 'moment'
+import { useActivityStore } from '@/stores/activityStore.ts'
 
-const {activitys} = defineProps({
-    activitys: {
-        type: Array as PropType<Activity[]>,
-        required: true
-    },
-    isSubmit: {
-        type: Boolean,
-        required: true
-    }
-})
+const store = useActivityStore()
 
 const targetId: Ref<string> = ref("")
 const handleDelete = (id:string, event: MouseEvent):void => {

@@ -5,7 +5,6 @@ import { Home } from '@vicons/ionicons5'
 import { NIcon } from 'naive-ui'
 import { h } from 'vue'
 import { createRouter, createWebHistory, RouterLink } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,12 +12,27 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('@/views/HomeView.vue'),
     },
     {
       path: '/activity',
-      name: 'activity',
-      component: () => import('../views/ActivityView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'activity',
+          component: () => import('@/views/ActivityView.vue'),
+        },
+        {
+          path: ':id',
+          name: 'activityDital',
+          component: () => import('@/components/activity/ActivityDital.vue'),
+        },
+        {
+          path: 'submit/:id?',
+          name: 'activitySubmit',
+          component: () => import('@/components/activity/ActivityForm.vue'),
+        },
+      ]
     },
   ],
 })
@@ -29,7 +43,7 @@ export const routerHelper =
     let menu:MenuOption[] = router.options.routes
     // .filter(r => r.name != "home")
     .map<MenuOption>(r => {
-      const name:string = r.name as string;
+      const name:string = r.name ? r.name as string : r.children![0].name as string;
 
       if (name.toUpperCase() == "home".toUpperCase()) {
         return {
